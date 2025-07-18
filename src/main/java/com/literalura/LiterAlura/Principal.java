@@ -49,6 +49,7 @@ public class Principal {
                 6 - Gerar estatísticas dos livros
                 7 - Gerar Top 10 livros mais baixados
                 8 - Buscar autor pelo nome
+                9 - Listar autores em ordem alfabética
                 0 - Sair
                 *************************************************
                 """;
@@ -82,6 +83,9 @@ public class Principal {
                         break;
                     case 8:
                         buscarAutorPeloNome();
+                        break;
+                    case 9:
+                        listarAutoresEmOrdemAlfabetica();
                         break;
                     case 0:
                         System.out.println("Saindo do LiterAlura. Até mais!");
@@ -310,6 +314,23 @@ public class Principal {
             System.out.println("--------------------------\n");
         } else {
             System.out.println("\nAutor '" + nomeAutor + "' não encontrado no banco de dados.");
+        }
+    }
+
+    private void listarAutoresEmOrdemAlfabetica() {
+        List<Autor> autoresOrdenados = autorRepository.findByOrderByNomeAsc();
+
+        if (autoresOrdenados.isEmpty()) {
+            System.out.println("\nNenhum autor registrado ainda no banco de dados para listar em ordem alfabética.");
+        } else {
+            System.out.println("\n--- Autores em Ordem Alfabética ---");
+            autoresOrdenados.forEach(autor -> {
+                System.out.println("Nome: " + autor.getNome() +
+                        ", Ano de Nascimento: " + (autor.getAnoNascimento() != null ? autor.getAnoNascimento() : "N/A") +
+                        ", Ano de Falecimento: " + (autor.getAnoFalecimento() != null ? autor.getAnoFalecimento() : "N/A") +
+                        ", Livros: [" + autor.getLivros().stream().map(Livro::getTitulo).collect(Collectors.joining(", ")) + "]");
+            });
+            System.out.println("-------------------------------------\n");
         }
     }
 }
